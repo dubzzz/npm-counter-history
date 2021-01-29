@@ -1,14 +1,16 @@
 const fs = require("fs");
 const https = require("https");
+const { exit } = require("process");
 
 async function getPageContent(url) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     https
       .get(url, (response) => {
         let data = "";
         response.on("data", (chunk) => (data += chunk));
         response.on("end", () => resolve(data));
       })
+      .on("error", (err) => reject(err))
       .end();
   });
 }
@@ -22,7 +24,6 @@ async function getDownloadsFor(packageName) {
   const versionsDownloadsRegex = /\"versionsDownloads\":(\{[^}]*\})/;
   const m = versionsDownloadsRegex.exec(npmWebPageContent);
   if (!m) {
-    console.log(npmWebPageContent);
     throw new Error("Unable to find downloads count");
   }
   return JSON.parse(m[1]);
@@ -41,4 +42,7 @@ async function appendDownloads(packageName) {
   else fs.writeFileSync(fileName, csvContent);
 }
 
-appendDownloads("fast-check");
+appendDownloads("fast-check").catch((err) => {
+  console.error(err);
+  exit(1);
+});
