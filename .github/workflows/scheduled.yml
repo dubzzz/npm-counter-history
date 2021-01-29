@@ -1,0 +1,22 @@
+name: "Sync npm"
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  sync_npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Using Node v14.x
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: "14.x"
+      - name: Append recent counts
+        run: node run.js
+      - name: Commit
+        run: |
+          git add fast-check.csv
+          git commit -m "Append new count"
+      - name: Push
+        run: git push
