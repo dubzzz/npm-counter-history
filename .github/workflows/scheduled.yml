@@ -1,7 +1,7 @@
 name: "Sync npm"
 on:
   schedule:
-    - cron: "*/2 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   sync_npm:
