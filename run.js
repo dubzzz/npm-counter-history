@@ -42,7 +42,12 @@ async function appendDownloads(packageName) {
   else fs.writeFileSync(fileName, csvContent);
 }
 
-appendDownloads("fast-check").catch((err) => {
+Promise.all([
+  appendDownloads("fast-check"),
+  appendDownloads("ava-fast-check"),
+  appendDownloads("jest-fast-check"),
+  appendDownloads("pure-rand"),
+]).catch((err) => {
   console.error(err);
   exit(1);
 });
