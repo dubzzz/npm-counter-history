@@ -2,12 +2,13 @@ name: "Sync npm"
 on:
   push:
     branches:
-      - master
+      - main
   schedule:
     - cron: "0 0 * * *"
 
 jobs:
   sync_npm:
+    name: "Sync npm"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
