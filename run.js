@@ -35,11 +35,11 @@ async function appendDownloads(packageName) {
 
   const fileName = `${packageName}.csv`;
   const csvContent = Object.entries(downloads)
-    .map(([version, count]) => `${currentDate};${version};${count}`)
+    .map(([version, count]) => `${currentDate},${version},${count}`)
     .join("\n");
 
   if (fs.existsSync(fileName)) fs.appendFileSync(fileName, "\n" + csvContent);
-  else fs.writeFileSync(fileName, csvContent);
+  else fs.writeFileSync(fileName, "date,version,count\n" + csvContent);
 }
 
 Promise.all([
