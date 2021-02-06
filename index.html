@@ -37,8 +37,8 @@
       function render(libraryName, aggregatorType) {
         // set the dimensions and margins of the graph
         const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-          width = 460 - margin.left - margin.right,
-          height = 400 - margin.top - margin.bottom;
+          width = 1024 - margin.left - margin.right,
+          height = 768 - margin.top - margin.bottom;
 
         // clean the chart area
         d3.select("#my_chart").selectAll("*").remove();
