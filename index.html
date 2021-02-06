@@ -27,8 +27,14 @@
       <option value="jest-fast-check">jest-fast-check</option>
       <option value="pure-rand">pure-rand</option>
     </select>
+    <select id="my_data_aggregator">
+      <option value="all">All</option>
+      <option value="by-minor">By minor</option>
+      <option value="by-major">By major</option>
+      <option value="total">Total</option>
+    </select>
     <script>
-      function render(libraryName) {
+      function render(libraryName, aggregatorType) {
         // set the dimensions and margins of the graph
         const margin = { top: 10, right: 30, bottom: 30, left: 60 },
           width = 460 - margin.left - margin.right,
@@ -56,7 +62,49 @@
           .style("opacity", 0);
 
         //Read the data
-        d3.csv(`./${libraryName}.csv`, function (data) {
+        d3.csv(`./${libraryName}.csv`, function (rawData) {
+          const relabelledData =
+            aggregatorType === "all"
+              ? rawData
+              : aggregatorType === "by-minor"
+              ? rawData.map((d) => ({
+                  ...d,
+                  version: d.version.replace(/^(\d+\.\d+)\.\d+(-|$)/, "$1.x$2"),
+                }))
+              : aggregatorType === "by-major"
+              ? rawData.map((d) => ({
+                  ...d,
+                  version: d.version.replace(
+                    /^(\d+)\.\d+\.\d+(-|$)/,
+                    "$1.x.x$2"
+                  ),
+                }))
+              : aggregatorType === "total"
+              ? rawData.map((d) => ({
+                  ...d,
+                  version: /^\d+\.\d+\.\d+$/.test(d.version)
+                    ? "official"
+                    : "experimental",
+                }))
+              : [];
+          const data = [
+            ...relabelledData
+              .reduce((acc, d) => {
+                const key = `${d.date},${d.version}`;
+                if (acc.has(key)) {
+                  const previous = acc.get(key);
+                  acc.set(key, {
+                    ...previous,
+                    count: +previous.count + +d.count,
+                  });
+                } else {
+                  acc.set(key, d);
+                }
+                return acc;
+              }, new Map())
+              .values(),
+          ];
+
           // Group the data per version
           const sumstat = d3
             .nest() // nest function allows to group the calculation per level of a factor
@@ -142,8 +190,14 @@
       }
 
       const selector = document.getElementById("my_chart_selector");
-      render(selector.value);
-      selector.addEventListener("change", () => render(selector.value));
+      const aggSelector = document.getElementById("my_data_aggregator");
+      render(selector.value, aggSelector.value);
+      selector.addEventListener("change", () =>
+        render(selector.value, aggSelector.value)
+      );
+      aggSelector.addEventListener("change", () =>
+        render(selector.value, aggSelector.value)
+      );
     </script>
   </body>
 </html>
