@@ -65,7 +65,7 @@
           .style("opacity", 0);
 
         //Read the data
-        d3.csv(`./${libraryName}.csv`, function (rawData) {
+        d3.csv(`./${libraryName.replace('/', '--')}.csv`, function (rawData) {
           const relabelledData =
             aggregatorType === "all"
               ? rawData
