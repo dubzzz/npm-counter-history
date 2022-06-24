@@ -33,7 +33,7 @@ async function appendDownloads(packageName) {
   const downloads = await getDownloadsFor(packageName);
   const currentDate = new Date().toISOString();
 
-  const fileName = `${packageName}.csv`;
+  const fileName = `${packageName.replace('/', '--')}.csv`;
   const csvContent = Object.entries(downloads)
     .map(([version, count]) => `${currentDate},${version},${count}`)
     .join("\n");
