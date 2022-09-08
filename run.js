@@ -47,6 +47,7 @@ Promise.all([
   appendDownloads("@fast-check/ava"),
   appendDownloads("@fast-check/jest"),
   appendDownloads("@fast-check/packaged"),
+  appendDownloads("@fast-check/poisoned"),
   appendDownloads("ava-fast-check"),
   appendDownloads("jest-fast-check"),
   appendDownloads("pure-rand"),
