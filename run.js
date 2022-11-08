@@ -45,6 +45,7 @@ async function appendDownloads(packageName) {
 Promise.all([
   appendDownloads("fast-check"),
   appendDownloads("@fast-check/ava"),
+  appendDownloads("@fast-check/expect-type"),
   appendDownloads("@fast-check/jest"),
   appendDownloads("@fast-check/packaged"),
   appendDownloads("@fast-check/poisoning"),
