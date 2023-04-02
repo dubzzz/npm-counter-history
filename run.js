@@ -24,7 +24,7 @@ async function getDownloadsFor(packageName) {
   const versionsDownloadsRegex = /\"versionsDownloads\":(\{[^}]*\})/;
   const m = versionsDownloadsRegex.exec(npmWebPageContent);
   if (!m) {
-    throw new Error("Unable to find downloads count");
+    throw new Error(`Unable to find downloads count of ${packageName}, got:\n${npmWebPageContent}`);
   }
   return JSON.parse(m[1]);
 }
